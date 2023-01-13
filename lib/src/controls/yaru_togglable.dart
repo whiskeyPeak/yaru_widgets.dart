@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
 import 'yaru_checkbox.dart';
 import 'yaru_radio.dart';
 import 'yaru_switch.dart';
@@ -9,6 +8,8 @@ const _kTogglableAnimationDuration = Duration(milliseconds: 150);
 const _kTogglableSizeAnimationDuration = Duration(milliseconds: 100);
 const _kIndicatorAnimationDuration = Duration(milliseconds: 200);
 const _kIndicatorRadius = 20.0;
+// Used to resize the canvas on active state. Must be an even number.
+const _kTogglableActiveResizeFactor = 2;
 
 /// A generic class to create a togglable widget
 ///
@@ -250,33 +251,38 @@ abstract class YaruTogglableState<S extends YaruTogglable> extends State<S>
 
     return _buildSemantics(
       child: _buildEventDetectors(
-        child: SizedBox(
-          width: togglableSize.width + activableAreaPadding.horizontal,
-          height: togglableSize.height + activableAreaPadding.vertical,
-          child: Padding(
-            padding: activableAreaPadding,
-            child: CustomPaint(
-              size: togglableSize,
-              painter: painter
-                ..interactive = widget.interactive
-                ..hover = _hover
-                ..focus = _focus
-                ..active = _active
-                ..checked = widget.checked
-                ..oldChecked = _oldChecked
-                ..position = _position
-                ..sizePosition = _sizePosition
-                ..indicatorPosition = _indicatorPosition
-                ..uncheckedColor = uncheckedColor
-                ..uncheckedBorderColor = uncheckedBorderColor
-                ..checkedColor = checkedColor
-                ..checkmarkColor = checkmarkColor
-                ..disabledUncheckedColor = uncheckedDisabledColor
-                ..disabledUncheckedBorderColor = uncheckedDisabledBorderColor
-                ..disabledCheckedColor = checkedDisabledColor
-                ..disabledCheckmarkColor = checkmarkDisabledColor
-                ..hoverIndicatorColor = hoverIndicatorColor
-                ..focusIndicatorColor = focusIndicatorColor,
+        child: Padding(
+          padding: activableAreaPadding,
+          child: SizedBox(
+            width: togglableSize.width,
+            height: togglableSize.height,
+            child: Center(
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  size: togglableSize,
+                  painter: painter
+                    ..interactive = widget.interactive
+                    ..hover = _hover
+                    ..focus = _focus
+                    ..active = _active
+                    ..checked = widget.checked
+                    ..oldChecked = _oldChecked
+                    ..position = _position
+                    ..sizePosition = _sizePosition
+                    ..indicatorPosition = _indicatorPosition
+                    ..uncheckedColor = uncheckedColor
+                    ..uncheckedBorderColor = uncheckedBorderColor
+                    ..checkedColor = checkedColor
+                    ..checkmarkColor = checkmarkColor
+                    ..disabledUncheckedColor = uncheckedDisabledColor
+                    ..disabledUncheckedBorderColor =
+                        uncheckedDisabledBorderColor
+                    ..disabledCheckedColor = checkedDisabledColor
+                    ..disabledCheckmarkColor = checkmarkDisabledColor
+                    ..hoverIndicatorColor = hoverIndicatorColor
+                    ..focusIndicatorColor = focusIndicatorColor,
+                ),
+              ),
             ),
           ),
         ),
@@ -361,12 +367,12 @@ abstract class YaruTogglablePainter extends ChangeNotifier
     final canvasSize = size;
     final t = position.value;
     final drawingOrigin = Offset(
-      kTogglableActiveResizeFactor / 2 * sizePosition.value,
-      kTogglableActiveResizeFactor / 2 * sizePosition.value,
+      _kTogglableActiveResizeFactor / 2 * sizePosition.value,
+      _kTogglableActiveResizeFactor / 2 * sizePosition.value,
     );
     final drawingSize = Size(
-      canvasSize.width - kTogglableActiveResizeFactor * sizePosition.value,
-      canvasSize.height - kTogglableActiveResizeFactor * sizePosition.value,
+      canvasSize.width - _kTogglableActiveResizeFactor * sizePosition.value,
+      canvasSize.height - _kTogglableActiveResizeFactor * sizePosition.value,
     );
 
     paintTogglable(canvas, size, drawingSize, drawingOrigin, t);

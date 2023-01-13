@@ -2,7 +2,7 @@ name: yaru_widgets
 description: Common flutter widgets useful for building desktop and web applications.
 homepage: https://github.com/ubuntu/yaru_widgets.dart
 
-version: 2.0.0-beta-3
+version: 2.0.0-beta-4
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   window_manager: ^0.3.0
   yaru: ^0.4.3
+  yaru_colors: ^0.1.2
   yaru_icons: ^1.0.0
 
 dev_dependencies:
